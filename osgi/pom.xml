@@ -9,7 +9,7 @@
     </parent>
 
     <artifactId>cucumber-osgi</artifactId>
-    <packaging>jar</packaging>
+    <packaging>bundle</packaging>
     <name>Cucumber-JVM: OSGi</name>
 
     <dependencies>
