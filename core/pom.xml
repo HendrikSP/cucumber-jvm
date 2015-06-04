@@ -9,7 +9,7 @@
     </parent>
 
     <artifactId>cucumber-core</artifactId>
-    <packaging>jar</packaging>
+    <packaging>bundle</packaging>
     <name>Cucumber-JVM: Core</name>
 
     <dependencies>
