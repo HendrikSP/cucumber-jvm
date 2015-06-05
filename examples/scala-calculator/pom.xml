@@ -5,7 +5,7 @@
         <groupId>info.cukes</groupId>
         <artifactId>cucumber-jvm</artifactId>
         <relativePath>../../pom.xml</relativePath>
-        <version>1.2.1-SNAPSHOT</version>
+        <version>1.2.3-SNAPSHOT</version>
     </parent>
 
     <artifactId>scala-calculator</artifactId>
@@ -36,13 +36,13 @@
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
-            <version>${scala.current.version}</version>
+            <version>${scala.latest.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-compiler</artifactId>
-            <version>${scala.current.version}</version>
+            <version>${scala.latest.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

@@ -2,13 +2,14 @@ package cucumber.runtime;
 
 import cucumber.api.SnippetType;
 import cucumber.api.StepDefinitionReporter;
+import cucumber.api.SummaryPrinter;
 import cucumber.runtime.formatter.ColorAware;
 import cucumber.runtime.formatter.PluginFactory;
 import cucumber.runtime.formatter.StrictAware;
 import cucumber.runtime.io.ResourceLoader;
 import cucumber.runtime.model.CucumberFeature;
-import gherkin.I18n;
 import cucumber.runtime.model.PathWithLines;
+import gherkin.I18n;
 import gherkin.formatter.Formatter;
 import gherkin.formatter.Reporter;
 import gherkin.util.FixJava;
@@ -35,7 +36,9 @@ public class RuntimeOptions {
     private final List<String> glue = new ArrayList<String>();
     private final List<Object> filters = new ArrayList<Object>();
     private final List<String> featurePaths = new ArrayList<String>();
-    private final List<String> pluginNames = new ArrayList<String>();
+    private final List<String> pluginFormatterNames = new ArrayList<String>();
+    private final List<String> pluginStepDefinitionReporterNames = new ArrayList<String>();
+    private final List<String> pluginSummaryPrinterNames = new ArrayList<String>();
     private final PluginFactory pluginFactory;
     private final List<Object> plugins = new ArrayList<Object>();
     private boolean dryRun;
@@ -85,8 +88,11 @@ public class RuntimeOptions {
             parse(Shellwords.parse(cucumberOptionsFromEnv));
         }
 
-        if (pluginNames.isEmpty()) {
-            pluginNames.add("progress");
+        if (pluginFormatterNames.isEmpty()) {
+            pluginFormatterNames.add("progress");
+        }
+        if (pluginSummaryPrinterNames.isEmpty()) {
+            pluginSummaryPrinterNames.add("default_summary");
         }
     }
 
@@ -113,10 +119,10 @@ public class RuntimeOptions {
             } else if (arg.equals("--tags") || arg.equals("-t")) {
                 parsedFilters.add(args.remove(0));
             } else if (arg.equals("--plugin") || arg.equals("-p")) {
-                pluginNames.add(args.remove(0));
+                addPluginName(args.remove(0));
             } else if (arg.equals("--format") || arg.equals("-f")) {
                 System.err.println("WARNING: Cucumber-JVM's --format option is deprecated. Please use --plugin instead.");
-                pluginNames.add(args.remove(0));
+                addPluginName(args.remove(0));
             } else if (arg.equals("--no-dry-run") || arg.equals("--dry-run") || arg.equals("-d")) {
                 dryRun = !arg.startsWith("--no-");
             } else if (arg.equals("--no-strict") || arg.equals("--strict") || arg.equals("-s")) {
@@ -151,6 +157,18 @@ public class RuntimeOptions {
         if (!parsedGlue.isEmpty()) {
             glue.clear();
             glue.addAll(parsedGlue);
+        }
+    }
+
+    private void addPluginName(String name) {
+        if (PluginFactory.isFormatterName(name)) {
+            pluginFormatterNames.add(name);
+        } else if (PluginFactory.isStepDefinitionResporterName(name)) {
+            pluginStepDefinitionReporterNames.add(name);
+        } else if (PluginFactory.isSummaryPrinterName(name)) {
+            pluginSummaryPrinterNames.add(name);
+        } else {
+            throw new CucumberException("Unrecognized plugin: " + name);
         }
     }
 
@@ -219,11 +237,19 @@ public class RuntimeOptions {
 
     List<Object> getPlugins() {
         if (!pluginNamesInstantiated) {
-            for (String pluginName : pluginNames) {
+            for (String pluginName : pluginFormatterNames) {
                 Object plugin = pluginFactory.create(pluginName);
                 plugins.add(plugin);
                 setMonochromeOnColorAwarePlugins(plugin);
                 setStrictOnStrictAwarePlugins(plugin);
+            }
+            for (String pluginName : pluginStepDefinitionReporterNames) {
+                Object plugin = pluginFactory.create(pluginName);
+                plugins.add(plugin);
+            }
+            for (String pluginName : pluginSummaryPrinterNames) {
+                Object plugin = pluginFactory.create(pluginName);
+                plugins.add(plugin);
             }
             pluginNamesInstantiated = true;
         }
@@ -242,6 +268,10 @@ public class RuntimeOptions {
         return pluginProxy(classLoader, StepDefinitionReporter.class);
     }
 
+    public SummaryPrinter summaryPrinter(ClassLoader classLoader) {
+        return pluginProxy(classLoader, SummaryPrinter.class);
+    }
+
     /**
      * Creates a dynamic proxy that multiplexes method invocations to all plugins of the same type.
      *
@@ -256,7 +286,14 @@ public class RuntimeOptions {
             public Object invoke(Object target, Method method, Object[] args) throws Throwable {
                 for (Object plugin : getPlugins()) {
                     if (type.isInstance(plugin)) {
-                        Utils.invoke(plugin, method, 0, args);
+                        try {
+                            Utils.invoke(plugin, method, 0, args);
+                        } catch (Throwable t) {
+                            if (!method.getName().equals("startOfScenarioLifeCycle") && !method.getName().equals("endOfScenarioLifeCycle")) {
+                                // IntelliJ has its own formatter which doesn't yet implement these methods.
+                                throw t;
+                            }
+                        }
                     }
                 }
                 return null;

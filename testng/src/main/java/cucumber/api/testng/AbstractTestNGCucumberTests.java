@@ -1,22 +1,36 @@
 package cucumber.api.testng;
 
-import org.testng.IHookCallBack;
-import org.testng.IHookable;
-import org.testng.ITestResult;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
+/**
+ * Runs cucumber every detected feature as separated test
+ */
+public abstract class AbstractTestNGCucumberTests {
+    private TestNGCucumberRunner testNGCucumberRunner;
 
-public abstract class AbstractTestNGCucumberTests implements IHookable {
-
-    @Test(groups = "cucumber", description = "Runs Cucumber Features")
-    public void run_cukes() throws IOException {
-        new TestNGCucumberRunner(getClass()).runCukes();
+    @BeforeClass(alwaysRun = true)
+    public void setUpClass() throws Exception {
+        testNGCucumberRunner = new TestNGCucumberRunner(this.getClass());
     }
 
-    @Override
-    public void run(IHookCallBack iHookCallBack, ITestResult iTestResult) {
-        iHookCallBack.runTestMethod(iTestResult);
+    @Test(groups = "cucumber", description = "Runs Cucumber Feature", dataProvider = "features")
+    public void feature(CucumberFeatureWrapper cucumberFeature) {
+        testNGCucumberRunner.runCucumber(cucumberFeature.getCucumberFeature());
     }
 
+    /**
+     * @return returns two dimensional array of {@link CucumberFeatureWrapper} objects.
+     */
+    @DataProvider
+    public Object[][] features() {
+        return testNGCucumberRunner.provideFeatures();
+    }
+
+    @AfterClass
+    public void tearDownClass() throws Exception {
+        testNGCucumberRunner.finish();
+    }
 }

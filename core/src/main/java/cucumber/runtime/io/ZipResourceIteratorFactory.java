@@ -1,35 +1,26 @@
 package cucumber.runtime.io;
 
-import cucumber.runtime.CucumberException;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.Iterator;
 
-import static cucumber.runtime.io.ClasspathIterable.filePath;
+import cucumber.runtime.CucumberException;
 
 /**
- * Factory which creates {@link ZipResourceIterator}s for URL's with the "jar"
- * protocol.
+ * Factory which creates {@link ZipResourceIterator}s for URL's with "jar", "zip" and "wsjar"
+ * protocols.
  */
 public class ZipResourceIteratorFactory implements ResourceIteratorFactory {
 
-    /**
-     * Initializes a new instance of the ZipResourceIteratorFactory class.
-     */
-    public ZipResourceIteratorFactory() {
-        // intentionally empty
-    }
-
     @Override
     public boolean isFactoryFor(URL url) {
-        return "jar".equals(url.getProtocol());
+        return url.getFile().contains("!/");
     }
 
     @Override
     public Iterator<Resource> createIterator(URL url, String path, String suffix) {
         try {
-            String jarPath = filePath(url);
+            String jarPath = Helpers.jarFilePath(url);
             return new ZipResourceIterator(jarPath, path, suffix);
         } catch (IOException e) {
             throw new CucumberException(e);

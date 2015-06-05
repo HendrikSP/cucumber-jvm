@@ -5,11 +5,11 @@
         <groupId>info.cukes</groupId>
         <artifactId>cucumber-jvm</artifactId>
         <relativePath>../pom.xml</relativePath>
-        <version>1.2.1-SNAPSHOT</version>
+        <version>1.2.3-SNAPSHOT</version>
     </parent>
 
     <artifactId>cucumber-core</artifactId>
-    <packaging>jar</packaging>
+    <packaging>bundle</packaging>
     <name>Cucumber-JVM: Core</name>
 
     <dependencies>

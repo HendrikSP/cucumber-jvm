@@ -1,3 +1,35 @@
+## [1.2.3-SNAPSHOT](https://github.com/cucumber/cucumber-jvm/compare/v1.2.2...master) (In Git)
+
+* [Core] Properly decode jar URLs with spaces (%20) - ([#866](https://github.com/cucumber/cucumber-jvm/issues/866) Aslak Hellesøy)
+* [Java] Arity mismatch Java8 Step Definition error ([#852](https://github.com/cucumber/cucumber-jvm/issues/852), [#847](https://github.com/cucumber/cucumber-jvm/pull/847) David Coelho)
+* [Java] Print Java 8 lambda snippets when `cucumber-java8` is active (Aslak Hellesøy)
+* [Core] Make the Summary Printer into a plugin ([#828](https://github.com/cucumber/cucumber-jvm/pull/828) Björn Rasmusson)
+* [Core] Additional unit-tests for [#789](https://github.com/cucumber/cucumber-jvm/issues/789) ([#815](https://github.com/cucumber/cucumber-jvm/pull/815) Klaus Bayrhammer)
+* [Java] Added @Documented to all step annotations ([#834](https://github.com/cucumber/cucumber-jvm/pull/834), [#833](https://github.com/cucumber/cucumber-jvm/issues/833) Peter Oxenham)
+* [Core] Set a description for Scenario Outline scenarios ([#841](https://github.com/cucumber/cucumber-jvm/pull/841), [#837](https://github.com/cucumber/cucumber-jvm/issues/837) Björn Rasmusson)
+* [Core] Call all formatters, also in case of unimplemented methods ([#842](https://github.com/cucumber/cucumber-jvm/pull/842), [#803](https://github.com/cucumber/cucumber-jvm/issues/803) Björn Rasmusson)
+* [TestNG] Run each feature as separate TestNG test ([#817](https://github.com/cucumber/cucumber-jvm/pull/817), [#653](https://github.com/cucumber/cucumber-jvm/pull/653) Dmitry Sidorenko, Björn Rasmusson)
+* [Core] Implement TestNG-compatible XML formatter ([#818](https://github.com/cucumber/cucumber-jvm/pull/818), [#621](https://github.com/cucumber/cucumber-jvm/pull/621) Dmitry Berezhony, Björn Rasmusson)
+* `DataTable.diff(List)` gives proper error message when the `List` argument is empty (Aslak Hellesøy)
+* Execute no scenarios when the rerun file is empty ([#840](https://github.com/cucumber/cucumber-jvm/issues/840) Björn Rasmusson)
+* Snippets for quoted arguments changed from `(.*?)` to `([^\"]*)` (which is how it was before 1.1.6). See [cucumber/cucumber#663](https://github.com/cucumber/cucumber/pull/663) (Aslak Hellesøy)
+* Fix non running gradle example ([#839](https://github.com/cucumber/cucumber-jvm/pull/839) Ole Christian Langfjæran)
+* [Clojure] Improved documentation for the clojure module ([#864](https://github.com/cucumber/cucumber-jvm/pull/864) Paul Doran)
+
+## [1.2.2](https://github.com/cucumber/cucumber-jvm/compare/v1.2.0...v1.2.2) (2015-01-13)
+
+(There is no 1.2.1 release)
+
+* [Core] Look up `cucumber.options` from `cucumber.properties` (Previously only `CUCUMBER_OPTIONS` was working). (Aslak Hellesøy)
+* [Android] put android project into default profile ([#821](https://github.com/cucumber/cucumber-jvm/pull/821) Sebastian Gröbler, Björn Rasmusson)
+* [Android] made android studio example use espresso 2 ([#820](https://github.com/cucumber/cucumber-jvm/pull/820) Sebastian Gröbler)
+* [Android] removed apklib generation from android project, fixed and cleaned up android examples ([#819](https://github.com/cucumber/cucumber-jvm/pull/819) Sebastian Gröbler, Björn Rasmusson)
+* [Groovy] Add support for execution order for Groovy hooks ([#809](https://github.com/cucumber/cucumber-jvm/pull/809), [#807](https://github.com/cucumber/cucumber-jvm/issues/807) Mohammad Shamsi)
+* [JUnit] JUnit 4.12 compatibility ([#794](https://github.com/cucumber/cucumber-jvm/pull/794), [#792](https://github.com/cucumber/cucumber-jvm/issues/792) Johann Vanackere)
+* [Java] Java 8 lambda step definitions. ([#738](https://github.com/cucumber/cucumber-jvm/issues/738), [#767](https://github.com/cucumber/cucumber-jvm/pull/767) Romain Manni-Bucau, Aslak Hellesøy with help from Dan Bodart).
+* [Core] Handles zip/jar protocols ([#808](https://github.com/cucumber/cucumber-jvm/issues/808), Rui Figueira)
+* [Core] Handles multiple classloaders ([#814](https://github.com/cucumber/cucumber-jvm/pull/814), Gerard de Leeuw)
+
 ## [1.2.0](https://github.com/cucumber/cucumber-jvm/compare/v1.1.8...v1.2.0) (2014-10-30)
 
 * [Clojure] Added clojure_cukes example to the maven build ([#790](https://github.com/cucumber/cucumber-jvm/pull/790) Jestine Paul)
